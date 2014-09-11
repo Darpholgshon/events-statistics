@@ -1,5 +1,6 @@
 package com.pressassociation.events.route;
 
+import com.pressassociation.events.config.DataSourceConfiguration;
 import com.pressassociation.events.config.MyCamelConfiguration;
 import com.pressassociation.events.config.QuartzConfiguration;
 import com.pressassociation.test.MockConfiguration;
@@ -23,9 +24,9 @@ import java.util.concurrent.TimeUnit;
  * Date: 27/01/14
  * Time: 10:45
  */
-@ContextConfiguration(classes = {QuartzConfiguration.class, MyCamelConfiguration.class, MockConfiguration.class})
+@ContextConfiguration(classes = {DataSourceConfiguration.class, QuartzConfiguration.class, MyCamelConfiguration.class, MockConfiguration.class})
 @WebAppConfiguration()
-@ActiveProfiles("mock")
+@ActiveProfiles(value={"integration", "mock"})
 public class QuartzSchedulerRouteTest extends AbstractJUnit4SpringContextTests {
   protected static final Logger LOG = LoggerFactory.getLogger(QuartzSchedulerRouteTest.class);
 

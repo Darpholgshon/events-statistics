@@ -2,10 +2,14 @@ package com.pressassociation.events.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
 
@@ -21,14 +25,15 @@ import javax.sql.DataSource;
 @ComponentScan(basePackages = "com.pressassociation.events.db")
 @PropertySource("classpath:application.properties")
 @Profile(value={"integration", "dev"})
-public class DataSourceConfiguration {
+public class DataSourceConfiguration implements ApplicationContextAware {
   protected static final Logger LOG = LoggerFactory.getLogger(DataSourceConfiguration.class);
 
-  @Autowired
-  Environment env;
+  private ApplicationContext context;
 
   @Bean
   public DataSource eventsDataSource() {
+    Environment env = context.getEnvironment();
+
     LOG.info("Create DataSource for arts2    => {}", env.getProperty("arts2.url"));
 
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -42,6 +47,8 @@ public class DataSourceConfiguration {
 
   @Bean
   public DataSource identityDataSource() {
+    Environment env = context.getEnvironment();
+
     LOG.info("Create DataSource for identity => {}", env.getProperty("identity.url"));
 
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -51,5 +58,21 @@ public class DataSourceConfiguration {
     dataSource.setPassword(env.getProperty("identity.pswd"));
 
     return dataSource;
+  }
+
+  @Bean
+  public DataSource quartzDataSource() {
+    LOG.info("Create DataSource for quartz => Embedded HSQLDB");
+
+    return new EmbeddedDatabaseBuilder()
+            .setType(EmbeddedDatabaseType.HSQL)
+            .addScript("classpath:database/tables_hsqldb.sql")
+            .build();
+  }
+
+  @Override
+  public void setApplicationContext(ApplicationContext applicationContext)
+          throws BeansException {
+    this.context = applicationContext;
   }
 }

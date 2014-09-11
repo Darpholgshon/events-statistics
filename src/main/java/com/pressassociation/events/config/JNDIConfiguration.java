@@ -30,4 +30,10 @@ public class JNDIConfiguration {
           throws NamingException {
     return new JndiDataSourceLookup().getDataSource("jdbc/identityDS");
   }
+
+  @Bean
+  public DataSource quartzDataSource()
+          throws NamingException {
+    return new JndiDataSourceLookup().getDataSource("jdbc/quartzDS");
+  }
 }

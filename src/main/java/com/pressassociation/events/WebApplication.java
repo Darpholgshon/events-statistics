@@ -2,6 +2,7 @@ package com.pressassociation.events;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
@@ -24,7 +25,8 @@ import java.sql.SQLException;
         // Exclude these auto configurations, because they only work when there is 1 datasource.
         HibernateJpaAutoConfiguration.class,
         DataSourceAutoConfiguration.class,
-        DataSourceTransactionManagerAutoConfiguration.class
+        DataSourceTransactionManagerAutoConfiguration.class,
+        FreeMarkerAutoConfiguration.class
 })
 public class WebApplication {
   public static void main(String[] args)

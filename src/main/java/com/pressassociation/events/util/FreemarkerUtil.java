@@ -3,13 +3,9 @@ package com.pressassociation.events.util;
 import com.google.common.collect.Maps;
 import com.pressassociation.events.db.model.Statistic;
 import freemarker.template.Configuration;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -35,35 +31,23 @@ public class FreemarkerUtil {
 
   public static String toHTML(Map<String, Object> dataMap, String templateName)
           throws IOException, TemplateException {
-    Configuration cfg = new freemarker.template.Configuration();
-    cfg.setDirectoryForTemplateLoading(file("templates"));
-    Template template = cfg.getTemplate(FileType.FTL.filename(templateName));
-
     StringWriter sw = new StringWriter();
-    template.process(dataMap, sw);
-
+    processTemplate(dataMap, sw, templateName);
     return sw.toString();
   }
 
   public static File toFile(Map<String, Object> dataMap, String templateName, FileType extension)
           throws IOException, TemplateException {
-
     File temp = File.createTempFile(templateName, extension.suffix());
-    FileWriter fw = new FileWriter(temp);
-
-    Configuration cfg = new freemarker.template.Configuration();
-    cfg.setDirectoryForTemplateLoading(file("templates"));
-    Template template = cfg.getTemplate(FileType.FTL.filename(templateName));
-    template.process(dataMap, fw);
-
+    processTemplate(dataMap, new FileWriter(temp), templateName);
     return temp;
   }
 
-  private static File file(String resource) {
-    return new File(filePath(resource));
-  }
+  private static void processTemplate(Map<String, Object> dataMap, Writer writer, String templateName)
+          throws IOException, TemplateException {
+    Configuration cfg = new freemarker.template.Configuration();
+    cfg.setClassForTemplateLoading(FreemarkerUtil.class, "templates");
 
-  private static String filePath(String resource){
-    return ClassLoader.getSystemClassLoader().getResource(resource).getPath();
+    cfg.getTemplate(FileType.FTL.filename(templateName)).process(dataMap, writer);
   }
 }
