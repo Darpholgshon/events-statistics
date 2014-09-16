@@ -23,9 +23,15 @@ public class TestFactory {
   public static Title testTitle() {
     return TitleBuilder
             .aTitle()
-            .withId("test-title")
+            .withTitleId("test-title")
             .withName("Something Interesting Happens!")
             .withCategory("Test")
+            .withVenueId("somint")
+            .withAddress("Somewhere Interesting, YO8 8FW")
+            .withMajor(1)
+            .withNextPerformance("20/10/2014")
+            .withLastPerformance("20/12/2014")
+            .withLevel2("This is something about the test title. Probably should've used Lorem Ipsum.")
             .build();
   }
   public static Venue testVenue() {
@@ -53,6 +59,19 @@ public class TestFactory {
     return VenueBuilder
             .aVenue()
             .withVenueList(Lists.newArrayList(testVenue()))
+            .build();
+  }
+
+  public static Title testTitleStub() {
+    return TitleBuilder
+            .aTitle()
+            .withTitleId("test-title")
+            .withName("Something Interesting Happens!")
+            .withCategory("Test")
+            .withVenueId("somint")
+            .withAddress("Somewhere Interesting, YO8 8FW")
+            .withNextPerformance("20/10/2014")
+            .withLastPerformance("20/12/2014")
             .build();
   }
 }

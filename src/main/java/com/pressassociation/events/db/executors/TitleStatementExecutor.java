@@ -20,22 +20,26 @@ import java.util.List;
 public class TitleStatementExecutor
         implements StatementExecutor<java.util.List<com.pressassociation.events.db.model.Title>> {
 
-  public static final String SQL = "SELECT DISTINCT t.titleid, t.name,"
-          + "      CASE"
-          + "         WHEN c3.name is not null THEN c3.name"
-          + "         WHEN c2.name is not null THEN c2.name"
-          + "         ELSE c1.name"
-          + "       END as category"
-          + "      FROM title t"
-          + "      JOIN titlecategory tc ON tc.titleid = t.titleid AND tc.sequenceno = 1"
-          + "      JOIN categorynode c1 ON tc.categorynodeid = c1.categorynodeid"
-          + " LEFT JOIN categorynode c2 ON c1.parentcategorynodeid = c2.categorynodeid"
-          + " LEFT JOIN categorynode c3 ON c2.parentcategorynodeid = c3.categorynodeid"
-          + "      JOIN event e ON e.titleid = t.titleid"
-          + "      JOIN eventtime et ON e.autoid = et.eventid"
-          + " LEFT JOIN arts2.clientdesc d1 ON e.titleid = d1.titleid AND d1.clientid = 3"
-          + "     WHERE CONCAT_WS(' ', et.date, COALESCE(et.time, CAST('00:00:00' AS TIME) ) ) >= now()"
-          + "       AND d1.description IS NULL ORDER BY 3, 1";
+  public static final String SQL = "SELECT"
+          + " t.titleid AS titleId, "
+          + " t.name AS name,"
+          + " ROOT_NAME(tc.categorynodeid) AS category,"
+          + " d2.description AS level2,"
+          + " v.venuid AS venueId,"
+          + " CONCAT_WS(', ', CONCAT_WS(', ', v.name, v.town), v.postcode) AS address,"
+          + " v.major AS major,"
+          + " min(et.date) AS nextPerformance, "
+          + " max(et.date) AS lastPerformance"
+          + "                FROM title t"
+          + "                JOIN event e ON e.titleid = t.titleid"
+          + "                JOIN eventtime et ON e.autoid = et.eventid AND et.date >= current_date()"
+          + "                JOIN venue v ON v.venuid = e.venuid"
+          + "                JOIN titlecategory tc ON tc.titleid = t.titleid AND tc.sequenceno = 1"
+          + "           LEFT JOIN clientdesc d1 ON t.titleid = d1.titleid AND d1.clientid = 3"
+          + "           LEFT JOIN clientdesc d2 ON t.titleid = d2.titleid AND d2.clientid = 0"
+          + "               WHERE d1.description IS NULL AND e.enddate > current_date()"
+          + "            GROUP BY t.titleid, v.venuid"
+          + "            ORDER BY category, lastPerformance desc;";
 
   @Override
   public List<Title> execute(Statement statement)
@@ -50,9 +54,15 @@ public class TitleStatementExecutor
       do {
         TitleBuilder
                 .aTitle()
-                .withId(rs.getString(1))
+                .withTitleId(rs.getString(1))
                 .withName(rs.getString(2))
                 .withCategory(rs.getString(3))
+                .withLevel2(rs.getString(4))
+                .withVenueId(rs.getString(5))
+                .withAddress(rs.getString(6))
+                .withMajor(rs.getInt(7))
+                .withNextPerformance(rs.getString(8))
+                .withLastPerformance(rs.getString(9))
                 .buildCollection(titles);
         rs.next();
       } while (!rs.isLast());

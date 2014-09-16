@@ -1,6 +1,7 @@
 package com.pressassociation.events.db;
 
 import com.pressassociation.events.config.DataSourceConfiguration;
+import com.pressassociation.events.db.model.Title;
 import com.pressassociation.events.db.model.Venue;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -67,6 +68,20 @@ public class QueryRepositoryIT {
 
     LOG.debug("Currently have {} titles without L1 descriptions in the arts2 database.", count);
   }
+
+  @Test
+  public void testIncompleteTitles()
+          throws SQLException {
+
+    List<Title> titles = repository.getIncompleteTitles();
+    assertThat(titles.isEmpty(), is(false));
+
+    LOG.debug("Currently have {} titles without L1 descriptions in the arts2 database.", titles.size());
+
+    LOG.debug("Example: {} ", titles.get(0));
+
+  }
+
 
   @Test
   public void testUnmappedVenuesCount()

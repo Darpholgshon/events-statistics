@@ -18,7 +18,7 @@ import java.util.List;
 public class Title {
 
   @XmlAttribute(required=true)
-  private String id;
+  private String titleId;
 
   @XmlElement
   private String name;
@@ -27,14 +27,40 @@ public class Title {
   private String category;
 
   @XmlElement
+  private String level2;
+
+  @XmlElement
+  private String venueId;
+
+  @XmlElement
+  private String address;
+
+  @XmlElement
+  private Integer major;
+
+  @XmlElement
+  private String nextPerformance;
+
+  @XmlElement
+  private String lastPerformance;
+
+  @XmlElement
   private List<Title> titles;
 
-  public String getId() {
-    return id;
+  public String getTitleId() {
+    return titleId;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setTitleId(String titleId) {
+    this.titleId = titleId;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String getCategory() {
@@ -45,12 +71,52 @@ public class Title {
     this.category = category;
   }
 
-  public String getName() {
-    return name;
+  public String getVenueId() {
+    return venueId;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setVenueId(String venueId) {
+    this.venueId = venueId;
+  }
+
+  public String getAddress() {
+    return address;
+  }
+
+  public void setAddress(String address) {
+    this.address = address;
+  }
+
+  public Integer getMajor() {
+    return major;
+  }
+
+  public void setMajor(Integer major) {
+    this.major = major;
+  }
+
+  public String getNextPerformance() {
+    return nextPerformance;
+  }
+
+  public void setNextPerformance(String nextPerformance) {
+    this.nextPerformance = nextPerformance;
+  }
+
+  public String getLastPerformance() {
+    return lastPerformance;
+  }
+
+  public void setLastPerformance(String lastPerformance) {
+    this.lastPerformance = lastPerformance;
+  }
+
+  public String getLevel2() {
+    return level2;
+  }
+
+  public void setLevel2(String level2) {
+    this.level2 = level2;
   }
 
   public List<Title> getTitles() {
@@ -64,10 +130,15 @@ public class Title {
   @Override
   public String toString() {
     return Objects.toStringHelper(this)
-                  .add("id", id)
+                  .add("titleId", titleId)
                   .add("name", name)
                   .add("category", category)
-                  //.add("titles", titles)
+                  .add("venueId", venueId)
+                  .add("address", address)
+                  .add("major", major)
+                  .add("nextPerformance", nextPerformance)
+                  .add("lastPerformance", lastPerformance)
+                  .add("level2", level2)
                   .omitNullValues()
                   .toString();
   }

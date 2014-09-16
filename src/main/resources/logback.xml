@@ -9,7 +9,7 @@
 		<file>${catalina.home}/logs/events-statistics.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- daily rollover -->
-			<fileNamePattern>events-statistics.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>${catalina.home}/logs/events-statistics.%d{yyyy-MM-dd}.log</fileNamePattern>
 
 			<!-- keep 7 days' worth of history -->
 			<maxHistory>7</maxHistory>
